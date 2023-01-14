@@ -36,7 +36,7 @@ const useStyle = makeStyles({
     bookimage2: {
         width: '45%',
         height: '90%',
-        border: '0px solid red',
+     
 
     },
     bookdetail: {
