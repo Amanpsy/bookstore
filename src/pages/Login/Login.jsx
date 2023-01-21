@@ -15,11 +15,12 @@ const useStyles = makeStyles({
     border: "1px solid red",
     background: "grey 0% 0% no-repeat padding-box",
     display: "flex",
+    
   },
   Left: {
     position: "relative",
     top: "185px",
-    left: "480px",
+    left: "420px",
     width: "624px",
     height: "391px",
     background: " #F5F5F5 ",
@@ -29,7 +30,7 @@ const useStyles = makeStyles({
   Right: {
     position: "relative",
     top: "169px",
-    left: "10%",
+    left: "5%",
     width: "389px",
     height: "425px",
     background: "#FFFFFF ",
@@ -54,15 +55,16 @@ const useStyles = makeStyles({
   buttons: {
     display: "flex",
     justifyContent: "space-between",
+    padding:"0px 42px 0px 22px"
   },
   loginbutton: {
-    fontSize: "25px !important",
+    fontSize: "20px !important",
     fontWeight: " eight bold",
     color: "grey !important",
     width: "40%",
   },
   signupbutton: {
-    fontSize: "25px !important",
+    fontSize: "20px !important",
     fontWeight: "eight bold",
     color: "black !important",
     width: "40%",

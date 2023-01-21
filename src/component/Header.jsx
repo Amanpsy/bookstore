@@ -17,6 +17,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import PersonIcon from "@mui/icons-material/Person";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -56,6 +57,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
  function Header() {
+
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -160,14 +164,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
           <Box sx={{ marginLeft: 20 }}>
             <img src="education.svg"></img>
           </Box>
+          <div  >
           <Typography
             variant="h6"
             noWrap
+            
             component="div"
             sx={{ display: { xs: "none", sm: "block" }, marginLeft: 2 , size:"small"}}
           >
             BookStore
           </Typography>
+          </div>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -184,15 +191,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" }, position:"relative", right:200 }}>
+          <Box sx={{ display: { xs: "none", md: "flex" }, position:"relative", right: 50 }}>
 
             <IconButton
               size="medium"
               sx={{ display: "flex", flexDirection: "column" , position: "relative",
-              right: 20,}}
+              right: 70,}}
               color="inherit"
             >
-              <div>
+              <div  >
                 <PersonIcon />
               </div>
               <Box sx={{ fontSize: "10px" }}>Profile</Box>
@@ -203,9 +210,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
               color="inherit"
             >
               <div>
-                <ShoppingCartIcon />
+                <ShoppingCartIcon  onClick={()=> navigate('/cart')} />
               </div>
-              <Box sx={{ fontSize: "10px" }}>Cart</Box>
+              <Box  sx={{ fontSize: "10px" }}>Cart</Box>
             </IconButton>
             <IconButton
               size="large"

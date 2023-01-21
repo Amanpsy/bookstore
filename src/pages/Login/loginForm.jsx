@@ -6,6 +6,7 @@ import { loginApi } from "../../services/userService";
 import { makeStyles } from "@mui/styles";
 import { useState } from "react";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles({
   container: {
@@ -44,10 +45,7 @@ const useStyles = makeStyles({
   loginbutton1: {
     backgroundColor: " #A03037",
     
-  },
-
-  
-    ortext :{
+  },  ortext :{
       display:"flex",
       flexDirection: "row",
       justifyContent: "space-evenly",
@@ -74,7 +72,11 @@ const useStyles = makeStyles({
     },
     pass:{
       fontSize:"11px"
+    },
+    emailtext:{
+      padding: "8.5px 57px"
     }
+
   
 });
 
@@ -85,6 +87,7 @@ const passwordRegex =
 
 function LoginForm() {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [signObj, setSignobj] = useState({
     email: " ",
     password: " ",
@@ -143,8 +146,8 @@ function LoginForm() {
       loginApi(signObj)
         .then((response) => {
           console.log(response);
-
-          localStorage.setItem("token", response.data.id);
+          localStorage.setItem("token", response.data.result.accessToken);
+          navigate('/dashboard')
         })
         .catch((error) => {
           console.log(error);
@@ -166,6 +169,7 @@ function LoginForm() {
             helperText={regexObj.emailHelper}
             variant="outlined"
             size="small"
+            sx={{ width: "280px" }}
           />
         </div>
         <div className={classes.texttitle}>
@@ -177,6 +181,7 @@ function LoginForm() {
             helperText={regexObj.passwordHelper}
             variant="outlined"
             size="small"
+            sx={{ width: "280px" }}
           />
         </div>
 

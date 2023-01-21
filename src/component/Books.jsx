@@ -14,7 +14,7 @@ const useStyle = makeStyles({
     },
     main2: {
         width: '16vw',
-        height: '34vh',
+        height: '36vh',
         border: '2px solid #D3D3D3',
         display: 'flex',
         flexDirection: 'column',
@@ -36,7 +36,8 @@ const useStyle = makeStyles({
     bookimage2: {
         width: '45%',
         height: '90%',
-     
+     position:"relative",
+     top:"15px"
 
     },
     bookdetail: {
@@ -124,7 +125,7 @@ function Books(props) {
             <Paper elevation={1} className={classes.main2}>
                 <Box className={classes.bookimage}>
                     <Box className={classes.bookimage2}>
-                        <img className={classes.bookimg} src={book.bookImage}/></Box>
+                        <img className={classes.bookimg} src="Image 11.png" /></Box>
                 </Box>
                 <Box className={classes.bookdetail}>
                     <Box className={classes.booktext}>
