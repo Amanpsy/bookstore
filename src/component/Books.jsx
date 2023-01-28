@@ -111,6 +111,7 @@ const useStyle = makeStyles({
         color: '#878787',
         textDecorationLine: 'line-through',
         fontSize: '12px',
+        marginRight:"30px"
     
     },
 })

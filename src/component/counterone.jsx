@@ -3,77 +3,59 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { makeStyles } from "@mui/styles";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { Box } from "@mui/system";
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import { cartApi } from "../services/dataService";
 const useStyle = makeStyles({
-  
-
-  displayBox: {
-    borderRadius: "2px",
-    opacity: "1",
+  newBox: {
+    height: "24px",
+    width: "24px",
+    border: "1px solid lightgray",
   },
-  mainBox:{
-  display:'flex',
-  justifyContent:"center",
-  alignItems:"center"
-  }
 });
 
 function CounterOne(props) {
   const classes = useStyle;
- 
-
-
-
-
-const cartQuantity = () =>{
-cartApi(props.bookId) .then((response) => {
-  console.log(response);
-})
-.catch((error) => {
-  console.log(error);
-});
-
-
-}
-
 
   return (
-   <div>
-    <Box className={classes.mainBox} sx={{
-    
-  display:"flex", alignItems:"center", justifyContent:"center", width:"70%", position:'relative', bottom:"5px" }}>
-        <div onClick={props.decrement} className={classes.minus}>
-          <RemoveIcon 
-            sx={{
-              width: "40%",
-              height: "50%",
-              borderRadius: "40%",
-            
-              border:'1px solid lightGray'
-            }}
-          />
-        </div>
+    <Box
+      className={classes.mainBox}
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+      }}
+    >
+      <div className={classes.minus}>
+        <RemoveIcon
+          fontSize="medium"
+          onClick={() => props.decreaseQuantity()}
+          sx={{
+            borderRadius: "40%",
+            border: "1px solid lightGray",
+            marginRight: "2px",
+          }}
+        />
+      </div>
 
-        <div className={classes.displayBox}>
-          <span>{props.count}</span>
-        </div>
+      <span
+        sx={{ height: "24px", width: "24px", border: "1px solid lightgray" }}
+      >
+        {props.count}
+      </span>
 
-        <div  onClick={props.increment} className={classes.minus}>
-          <AddIcon 
-            fontSize="small"
-            sx={{
-              width: "40%",
-              height: "50%",
-              borderRadius: "40%",
-              border:'1px solid lightGray'
-           
-            }}
-          />
-        </div>
-        </Box>
-        </div>
+      <div className={classes.minus}>
+        <AddIcon
+          onClick={() => props.incrementQuantity()}
+          fontSize="medium"
+          sx={{
+            borderRadius: "40%",
+            border: "1px solid lightGray",
+            marginLeft: "3px",
+          }}
+        />
+      </div>
+    </Box>
   );
 }
 

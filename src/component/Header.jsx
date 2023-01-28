@@ -52,18 +52,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
-      width: "30vw",
+      width: "20vw",
     },
   },
 }));
  function Header() {
+
+  const [search, setsearch] = React.useState("");
+  console.log(search)
 
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
-  const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
@@ -74,36 +76,14 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     setMobileMoreAnchorEl(null);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
+ 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const menuId = "primary-search-account-menu";
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
+  
+ 
+  
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
@@ -137,7 +117,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
           color="inherit"
         >
           <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
+      
           </Badge>
         </IconButton>
         <p>Notifications</p>
@@ -179,24 +159,26 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
-            <StyledInputBase
+            <StyledInputBase 
+            onChange={(e) => setsearch(e.target.value) }
               placeholder="Search…"
               sx={{
                 color: "black",
                 size: "Small",
                 position: "relative",
-                right: 320,
+                right:"320px"
+           
               }}
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" }, position:"relative", right: 50 }}>
+          <Box sx={{ display: { xs: "none", md: "flex" }, position:"relative", right: 200 }}>
 
             <IconButton
               size="medium"
-              sx={{ display: "flex", flexDirection: "column" , position: "relative",
-              right: 70,}}
+              sx={{ display: "flex", flexDirection: "column" , position: "relative"
+              }}
               color="inherit"
             >
               <div  >
@@ -206,7 +188,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
             </IconButton>
             <IconButton
               size="medium"
-              sx={{ display: "flex", flexDirection: "column" }}
+              sx={{ display: "flex", flexDirection: "column", position: "relative",left:"20px"
+             }}
               color="inherit"
             >
               <div>
@@ -218,7 +201,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
               size="large"
               edge="end"
               aria-label="account of current user"
-              aria-controls={menuId}
+             
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               color="inherit"
@@ -239,7 +222,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-      {renderMenu}
+      
     </Box>
   );
 }

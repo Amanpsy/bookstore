@@ -7,6 +7,7 @@ import { useState } from "react";
 import { padding } from "@mui/system";
 import { Box } from "@mui/material";
 import BookDetails from "../../component/BookDetail";
+import Paginations from "../../component/pagination";
 
 const useStyle = makeStyles({
   container: {
@@ -44,9 +45,9 @@ const useStyle = makeStyles({
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    gap:"15px",
-    position:"relative",
-    right:"20px"
+    gap: "15px",
+    position: "relative",
+    right: "60px",
   },
   contentWrapper: {
     display: "flex",
@@ -63,15 +64,18 @@ function Dashboard() {
   const [bookList, setBookList] = useState([]);
   const [showDetails, setShowdetails] = useState(false);
   const [bookDetails, setBookdetails] = useState({});
+  const [search, setsearch] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 4;
 
   const selectedBookDetails = (details) => {
     setShowdetails(true);
-    setBookdetails(details)
+    setBookdetails(details);
   };
 
-  const  openBookBack = ()=>{
-    setShowdetails(false)
-  }
+  const openBookBack = () => {
+    setShowdetails(false);
+  };
 
   useEffect(() => {
     getBookList()
@@ -84,44 +88,61 @@ function Dashboard() {
       });
   }, []);
 
+  console.log(currentPage, "current page");
+  // Get current posts
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+
+
+ const currentPosts = bookList.slice(indexOfFirstPost, indexOfLastPost);
+  
+    //currentPosts.filter((book) => book.bookName.includes(search));
+  
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className={classes.container}>
       <div className={classes.header}>
-        <Header />
+        <Header searchText= {search} onSearchChange= {setsearch}  />
       </div>
       <div className={classes.contentWrapper}>
-        { showDetails ? "" :  <div className={classes.text}>
-          <span className={classes.bookspan}>Books</span>
+        {showDetails ? (
+          ""
+        ) : (
+          <div className={classes.text}>
+            <span className={classes.bookspan}>Books</span>
 
-          <span className={classes.itemspan}>( {bookList.length} items)</span>
-        </div>}
+            <span className={classes.itemspan}>( {bookList.length} items)</span>
+          </div>
+        )}
         <div className={classes.mainbooks}>
           {showDetails ? (
             <BookDetails
-            openBookBack={openBookBack}
-            bookName={bookDetails.bookName}
+              openBookBack={openBookBack}
+              bookName={bookDetails.bookName}
               author={bookDetails.author}
               quantity={bookDetails.quantity}
               discountPrice={bookDetails.discountPrice}
               price={bookDetails.price}
-              bookId ={bookDetails._id}
-
-             
+              bookId={bookDetails._id}
             />
-          ) : 
-            bookList.map((book) => (
-              <Box onClick={() => selectedBookDetails(book)}> 
-              <Books
-
-                key={book._id}
-                book={book}
-              
-              />
-              </Box> 
+          ) : (
+            currentPosts.map((book) => (
+              <Box onClick={() => selectedBookDetails(book)}>
+                <Books key={book._id} book={book} />
+              </Box>
             ))
-          }
+          )}
+          <Paginations
+            page={currentPage}
+            paginate={paginate}
+            count={bookList.length / postsPerPage}
+          />
         </div>
       </div>
+      <div></div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@mui/styles";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { Box } from "@mui/material";
@@ -8,91 +8,71 @@ import CustomerDetails from "./customerDetail";
 import { useState } from "react";
 import CounterOne from "./counterone";
 import Order from "./orderSummery";
+import { cartApi, getcartList } from "../services/dataService";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles({
   main: {
-    height: "250vh",
-    width: "100vw",
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
-    justifyContent: "top",
-    paddingLeft:"13%",
-    paddingTop:'20px'
-  },
-  secondMain:{
-    height: "200%",
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    flex: '1'
+    paddingLeft: "200px",
   },
   firstBox: {
-    height: "12%",
-    width: "774px",
+    padding: "18px 36px 18px 36px",
     border: "1px solid lightGray",
-    
+    width: "59%",
   },
   span: {
-    font: "normal normal normal 14px/17px Lato",
+    font: "normal normal normal 18px/17px Lato",
     letterSpacing: "0px",
     color: " #0A0102",
-   
+    opacity: "1",
   },
   cartDetails: {
     display: "flex",
     justifyContent: "space-between",
+    alignItems: "center",
   },
-  span: {
-    padding: "20px 0px 0px 50px",
-    position: "relative",
-    top: "12px"
-  },
-  spans: {
-    position: "relative",
-    top: "15px",
-    right: "5px",
-  },
-  bookDetail: {
-    height: "90%",
-    width: "50%",
-    position: "relative",
-    top: "30px",
-    left: "60px",
+  address: {
     display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
-  bookimg: {
 
-    position: "relative",
-    top: "4px",
- 
+  bookDetail: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    margin: "10px 0px ",
   },
-  bookName: {
-    position: "relative",
-    left: "70px",
+  right: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    marginLeft: "25px",
+
+    width: "25%",
   },
+
   bookauthor: {
     width: "63px",
     height: "8px",
     color: "#9D9D9D",
-    position: "relative",
-    left: "46px",
   },
   bookPrice: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between",
+
     color: "#0A0102",
-    position: "relative",
-    left: "70px",
-    top: "20px",
   },
   discount: {
     color: "#878787",
-    right: "85px",
-    position: "relative",
-    fontSize: "8px",
+    fontSize: "14px",
     textDecorationLine: "line-through",
+    marginLeft: "10px",
   },
   price: {
     textDecoration: " line-through",
@@ -100,24 +80,20 @@ const useStyles = makeStyles({
     letterSpacing: "0px",
     color: "#9D9D9D",
     opacity: "1",
-    right: "30px",
-    position: "relative",
   },
   cartcounter: {
-    left: "100px",
-    position: "relative",
-    top: "30px",
     display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "60%",
+    marginTop: "10px",
   },
 
   plus: {
-    position: "relative",
-
     color: "gray",
   },
   remove: {
-    left: "50px",
-    position: "relative",
     font: "normal normal normal 12px/15px Lato",
     letterSpacing: "0px",
     color: " #0A0102",
@@ -135,159 +111,249 @@ const useStyles = makeStyles({
     width: "20px",
     height: "20px",
     border: "1px solid FFFDD0",
-    left: "25px",
-    position: "relative",
   },
   placeOder: {
-   position:'relative',
-   left: "280px",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    position: "relative",
+    bottom: "40px",
   },
-  
+
   secondBox: {
-  marginTop:"20px",
-  width: "774px",
+    width: "850px",
     height: "60px",
-
-   display:"flex",
-   alignContent:"flex-start",
-
+    border: "0.5px solid lightgray",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    padding: "5px",
+    marginTop: "10px",
   },
   thirdBox: {
-    
+    width: "850px",
     height: "60px",
-
-    marginTop: "5px",
-    width: "774px",
-    display:"flex",
-   alignContent:"flex-start",
-   
+    border: "0.5px solid lightgray",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    padding: "5px",
+    marginTop: "20px",
   },
   addressDetail: {
     font: "normal normal normal 15px/18px ",
     color: " #333232",
     opacity: "1",
-    paddingLeft:"25px"
   },
   orderBox: {
     font: "normal normal normal 15px/18px ",
     color: " #333232",
     opacity: "1",
-    paddingLeft:"25px"
   },
-  img:{
+  img: {
     width: "65px",
-height: "85px",
-  }
+    height: "85px",
+  },
+  homebook: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginTop: "20px",
+    marginBottom: "20px",
+  },
+  home: {
+    color: "#9D9D9D",
+    fontSize: "12px",
+  },
+  book: {
+    color: "#0A0102",
+    fontSize: "12px",
+  },
+  counterDiv: {
+    height: "10%",
+    width: "40%",
+  },
 });
 
 function Mycart() {
   const classes = useStyles();
-
+  const navigate = useNavigate();
   const [showcustomerDetail, setShowcustomerDetail] = useState(false);
 
-const [showOrdersummery,setshowOrdersummery] = useState(false);  
+  const [showOrdersummery, setshowOrdersummery] = useState(false);
+
+  const [cartList, setCartlist] = useState([]);
+  console.log(cartList);
+  const getCart = () => {
+    getcartList()
+      .then((response) => {
+        console.log(response);
+        setCartlist(response.data.result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getCart();
+  }, []);
 
   const showpage = () => {
     setShowcustomerDetail(true);
   };
 
+  const incrementQuantity = (bookId, count) => {
+    let data = {
+      quantityToBuy: count + 1,
+    };
+    cartQuantity(bookId, data);
+  };
 
-  
+  const decreaseQuantity = (bookId, count) => {
+    let data = {
+      quantityToBuy: count - 1,
+    };
+    cartQuantity(bookId, data);
+  };
+
+  const cartQuantity = (bookId, data) => {
+    cartApi(bookId, data)
+      .then((response) => {
+        getCart();
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  console.log(showOrdersummery)
+  const openBook = () => {
+    navigate("/dashboard");
+  };
 
   return (
     <div>
       <Header />
       <div className={classes.main}>
-      <div className={classes.secondMain}>
+        <Box className={classes.homebook}>
+          <Box className={classes.home} onClick={() => openBook()}>
+            Home
+          </Box>
+          <Box className={classes.book}>/ My Cart</Box>
+        </Box>
         <div className={classes.firstBox}>
           <div className={classes.cartDetails}>
             <div>
-              <span className={classes.span}>My Cart(1)</span>
+              <span className={classes.span}> My cart({cartList.length})</span>
             </div>
-            <div>
-              <LocationOnIcon
-                className={classes.icon}
-                color="error"
-                sx={{ position: "relative", top: "20px" }}
-              />
+            <div className={classes.address}>
+              <LocationOnIcon className={classes.icon} color="error" />
               <span className={classes.spans}>
                 BridgeLabz Solutions LLP, No...
               </span>
             </div>
           </div>
 
-          <div className={classes.bookDetail}>
-            <div className={classes.left}>
-              <div className={classes.bookimg}>
-                <img className={classes.img} src="newBook.png"></img>
+          {cartList.map((book) => (
+            <div className={classes.bookDetail}>
+              <div className={classes.left}>
+                <div className={classes.bookimg}>
+                  <img className={classes.img} src="newBook.png"></img>
+                </div>
+              </div>
+              <div className={classes.right}>
+                <div className={classes.bookName}>
+                  <span>{book.product_id.bookName}</span>
+                </div>
+                <div>
+                  <span className={classes.bookauthor}>
+                    {book.product_id.author}
+                  </span>
+                </div>
+                <div className={classes.bookPrice}>
+                  <div>
+                    <span> Rs. {book.product_id.discountPrice} </span>
+                  </div>
+
+                  <div className={classes.discountPrice}>
+                    <span className={classes.discount}>
+                      {book.product_id.price}
+                    </span>
+                  </div>
+                </div>
+                <div className={classes.cartcounter}>
+                  <div className={classes.counterDiv}>
+                    <CounterOne
+                      incrementQuantity={() =>
+                        incrementQuantity(book._id, book.quantityToBuy)
+                      }
+                      decreaseQuantity={() =>
+                        decreaseQuantity(book._id, book.quantityToBuy)
+                      }
+                      count={book.quantityToBuy}
+                    />
+                  </div>
+                  <div>
+                    <span className={classes.remove}>Remove</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className={classes.right}>
-              <div className={classes.bookName}>
-                <span>Dont make me think</span>
-              </div>
-              <div>
-                <span className={classes.bookauthor}>by Steve Krug</span>
-              </div>
-              <div className={classes.bookPrice}>
-                <div>
-                  <span className={classes.bookactualPrice}> Rs. 1500</span>
-                </div>
-                <div className={classes.discountPrice}>
-                  <span className={classes.price}>Rs.2000</span>
-                </div>
-              </div>
-              <div className={classes.cartcounter}>
-                <div>
-                  <span className={classes.cartValue}>1</span>
-                </div>
-                <div className={classes.plusDiv}>
-                  <span className={classes.plus}>+</span>
-                </div>
-                <div>
-                  <span className={classes.remove}>Remove</span>
-                </div>
-              </div>
-              <div className={classes.placeOder}>
-              <div>
+          ))}
+
+          <div className={classes.placeOder}>
+            <div>
+              {showcustomerDetail ? null : (
                 <Button
                   onClick={showpage}
                   className={classes.placeorderBtn}
                   variant="contained"
-                  
                 >
                   Place Order
                 </Button>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
-       <div> {showcustomerDetail ? (
-          ""
-        ) : (
-          <div>
-            {" "}
-            
-            <div className={classes.secondBox}>
+
+        <div>
+          {showcustomerDetail ? (
+            ""
+          ) : (
             <div>
-              <span className={classes.addressDetail}>Address Detail</span>
+              <div className={classes.secondBox}>
+                <div>
+                  <span className={classes.addressDetail}>Address Detail</span>
+                </div>
               </div>
             </div>
-            <div className={classes.thirdBox}>
-            <div>
-              <span type="text" className={classes.orderBox}>
-                Order Summery
-              </span>{" "}
-              </div>
-            </div>{" "}
-          </div>
-        )}
-            <div>
-        {showcustomerDetail ? <CustomerDetails  onContinueclick={() => setshowOrdersummery(true)}   /> : ""}
+          )}
 
-          {showOrdersummery ? <Order/> : ""}
-          </div>
+          <div>
+            {showcustomerDetail ? (
+              <CustomerDetails
+                onContinueclick={() => setshowOrdersummery(true)}
+              />
+            ) : null}
+
+         
+            {showOrdersummery ? (
+              <Order/>
+            ) : (
+              <div className={classes.thirdBox}>
+                <div>
+                  <span type="text" className={classes.orderBox}>
+                    Order Summery
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

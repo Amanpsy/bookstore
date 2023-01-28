@@ -8,6 +8,7 @@ import Rating from "@mui/material/Rating";
 import InputBase from "@mui/material/InputBase";
 import CounterOne from "./counterone";
 import { addTocart, addToWishlist, cartApi } from "../services/dataService";
+import Header from "./Header";
 
 const useStyle = makeStyles({
   headerbsummary: {
@@ -16,14 +17,15 @@ const useStyle = makeStyles({
     display: "flex",
     alignItems: "flex-start",
     position: "relative",
-    right: "15%",
+    right: "10%",
     top: "10px",
   },
   homebook: {
     display: "flex",
     flexDirection: "row",
     position: "relative",
-    left: "140px",
+    left: "15px",
+    top:"30px"
   },
   home: {
     color: "#9D9D9D",
@@ -43,7 +45,8 @@ const useStyle = makeStyles({
     flexDirection: "row",
     alignItems: "flex-start",
     position: "relative",
-  right:"6%"
+  right:"6%",
+  marginTop:"60px"
   },
   container4: {
     width: "96%",
@@ -55,7 +58,7 @@ const useStyle = makeStyles({
   },
   buttons: {
     width: "36%",
-    height: "70%",
+    height: "68%",
     border: "1px solid #D1D1D1",
     display: "flex",
     flexDirection: "column",
@@ -154,7 +157,7 @@ const useStyle = makeStyles({
   },
   bookcost1: {
     position: "relative",
-    right: "85px",
+    right: "70px",
     color: "#878787",
     textDecorationLine: "line-through",
     fontSize: "14px",
@@ -220,6 +223,17 @@ const useStyle = makeStyles({
     alignItems: "flex-end",
     position: "relative",
   },
+  detail:{
+    position:"relative",
+    left:"2px"
+  },
+  round:{
+    position:"relative",
+    right:"2px"
+  },
+  new:{
+    marginLeft:"40px"
+  }
 });
 
 function BookDetails(props) {
@@ -228,13 +242,34 @@ function BookDetails(props) {
   const [count, setCount] = useState(0);
   const [showCOunter, setshowCOunter] = useState(false);
 
-  const increment = () => {
-    setCount(count + 1);
-  };
-  const decrement = () => {
-    setCount(count - 1);
+
+  const incrementQuantity = () => {
+   
+    setCount((prevState) => prevState + 1);
+    let data = {
+      quantityToBuy: count + 1,
+    };
+    cartQuantity(data);
   };
 
+  const decreaseQuantity = () => {
+    setCount((prevState) => prevState - 1);
+    let data = {
+      quantityToBuy: count - 1,
+    };
+    cartQuantity(data);
+  };
+
+  const cartQuantity = (data) => {
+    console.log(props.bookId);
+    cartApi(props.bookId, data)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   const openBook = () => {
     props.openBookBack();
   };
@@ -254,21 +289,6 @@ function BookDetails(props) {
       });
   };
 
-  const cartQuantity = () =>{
-    cartApi(props.bookId) .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-    
-    
-    }
-
-
-
-
-
 
 
 
@@ -286,17 +306,22 @@ function BookDetails(props) {
       });
   };
 
+
+
+  
+
   return (
+  
     <Box>
-      <Box className={classes.headerbsummary}>
+    
+      
         <Box className={classes.homebook}>
           <Box className={classes.home} onClick={() => openBook()}>
             Home
           </Box>
           <Box className={classes.book}>/ Book (01)</Box>
         </Box>
-      </Box>
-
+      
       <Box className={classes.container3}>
         <Box className={classes.container4}>
         <div className={classes.smallImg}>
@@ -322,18 +347,20 @@ function BookDetails(props) {
                 ) : (
                   ""
                 )}
-                {count > 0 ? (
-                  <CounterOne
-                    count={count}
-                    onClick={openCounter}
-                    increment={increment}
-                    decrement={decrement}
-
+                {    count > 0 ? (
+                 <div className={classes.new}>
+                 <CounterOne
+                 count={count}
+                 onClick={openCounter}
+                 incrementQuantity={incrementQuantity}
+                 decreaseQuantity={decreaseQuantity}
+               
                   />
+                  </div>
                 ) : (
                   ""
                 )}
-
+                  
                 <Button sx={{minWidth:"99px"}}
                   onClick={myCartDetails}
                   variant="contained"
@@ -375,14 +402,15 @@ function BookDetails(props) {
 
               <Box className={classes.bookparagraph}>
                 <Box className={classes.para1}>
-                  <span
+                  <span className={classes.detail}
                     style={{
                       color: "#878787",
                       display: "flex",
                       alignItems: "center",
                     }}
-                  >
-                    <Box
+                 
+                    >
+                    <Box className={classes.round} 
                       style={{
                         width: "5px",
                         height: "5px",

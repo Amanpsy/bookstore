@@ -6,18 +6,20 @@ import { useState } from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { addAddress } from "../services/dataService";
 import { Navigate, useNavigate } from "react-router-dom";
+import Order from "./orderSummery";
 
 
 const useStyle = makeStyles({
   containercd: {
-    width: "774px",
+    width: "850px",
     height: "70vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
-    top: "1px",
-    border: "2px solid #DCDCDC",
+    bottom:"80px",
+    top:"20px",
+    border: "1px solid #DCDCDC",
   },
   maindetails: {
     border: "0px solid red",
@@ -27,6 +29,8 @@ const useStyle = makeStyles({
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
+   position:'relative',
+   top:"20px"
   },
   maincd: {
     width: "100%",
@@ -34,6 +38,7 @@ const useStyle = makeStyles({
     border: "0px solid red",
     display: "flex",
     justifyContent: "space-between",
+ 
   },
   customerdetails: {
     color: "#333232",
@@ -41,6 +46,7 @@ const useStyle = makeStyles({
     fontWeight: "500",
     position:"relative",
     left:"10px"
+  
   },
   newadd: {
     width: "20%",
@@ -153,6 +159,7 @@ function CustomerDetails(props) {
         console.log(response, "getting cx details");
         setContinueButton(true)
         props.onContinueclick();
+       
       })
       .catch((error) => {
         console.log(error);
@@ -259,19 +266,21 @@ function CustomerDetails(props) {
               </Box>
             </Box>
           </Box>
-          <Box className={classes.continuebutton}>
-            {continuebutton ? null : (
-              <Button
-                sx={{ width: "23%", height: "80%" }}
-                variant="contained"
-               onClick={openOrderDetails}
-              >
-                Continue
-              </Button>
-            )}
-          </Box>
+          {continuebutton ? "" :
+            <Box className={classes.continuebutton}>
+            <Button
+              sx={{ width: "23%", height: "80%" }}
+              variant="contained"
+            onClick={openOrderDetails}
+            >
+              Continue
+            </Button> 
+            
+          </Box>}
         </Box>
+     
       </Card>
+      
     </div>
   );
 }

@@ -1,142 +1,191 @@
-import React from 'react'
-import { makeStyles } from '@mui/styles';
-import { Box, IconButton } from '@mui/material';
-import Header from './Header';
+import React from "react";
+import { makeStyles } from "@mui/styles";
+import { Box, IconButton } from "@mui/material";
+import Header from "./Header";
 import Button from "@mui/material/Button";
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { addOrder, getcartList } from "../services/dataService";
+import { useEffect } from "react";
+import { positions } from "@mui/system";
 
 const useStyle = makeStyles({
-  
-    Container: {
-        height:"100vh",
-        width:"100vw",
-       
-    },
-    row2: {
-        display: 'flex',
-        flexDirection: 'row',
-        height: "237px",
-        border:"1px solid lightGray",
-        width: "774px",
-        marginTop:"1px",
-        position:"relative",
+  Container: {
+    display: "flex",
+    flexDirection: "column",
+    border: "1px solid lightGray",
+    width: "778px",
+    justifyContent:'center',
+    alignItems:"flex-start",
+    padding:"18px 36px 18px 36px",
+    marginTop:"40px"
+  },
+  bookDetail: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    margin: "10px 0px ",
     
-    },
-    item2: {
-        display: 'flex',
-        flexDirection: 'column',
-        position:"relative",
-        left:"20px",
-        top:"47px",
-        
-        
-    },
-    row3: {
-        marginTop: '10px',
-        display: 'flex',
-        alignItems: 'flex-start'
-    },
-    bookcost: {
-        color: '#878787',
-        textDecorationLine: 'line-through',
-        fontSize: '14px',
-        marginLeft: '10px',
-        marginTop: '1px'
-    },
-    row4: {
-        display: 'flex',
-        flexDirection: 'row',
-        marginLeft: '45vw',
-        marginTop: '10px',
-        height: '30px'
-    },
-  
-    imgBox:{
-        position:"relative",
-        top:"50px"
-    },orderSummery:{
-        position:"relative",
-        left:"42px",
-        top:"10px"
-    },
-   
-   passTime:{
-    display:"flex",
-    justifyContent:"space-around",
+  },
+  right: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    marginLeft: "25px",
+
+  },
+  item2: {
+    display: "flex",
+    flexDirection: "column",
     
-   },
-   Checkout:{
+  },
+  row3: {
+    marginTop: "10px",
+    display: "flex",
+    alignItems: "flex-start",
+    marginLeft: "0px",
     position:"relative",
-        top:"150px",
-        left:"84%",
-        
-   },
-   box:{
-    display:"flex",
-   position:"relative", 
-   right:"50px",
-   top:'20px'
-   }
+    left:"15px"
+  },
+  bookcost: {
+    color: "#878787",
+    textDecorationLine: "line-through",
+    fontSize: "14px",
+    marginLeft: "10px",
+    marginTop: "1px",
+  },
+  row4: {
+    display: "flex",
+    flexDirection: "row",
+    marginLeft: "45vw",
+    marginTop: "10px",
+    
+  },
 
-})
+  imgBox: {
+  
+  },
+  orderSummery: {
 
+    position:"relative",
+    right:"30px"
+  },
+
+  
+  Checkout: {
+   display:"flex",
+   flexDirection:"row",
+   justifyContent:'flex-end',
+   alignItems:"center",
+   position:"relative",
+   left: "83%",
+   bottom: "20px"
+  },
+  box: {
+    display: "flex",
+   
+  },
+  authorbook: {
+    marginRight: "5px",
+  },
+  
+});
 
 function Order() {
-    const classes = useStyle()
+  const classes = useStyle();
 
-    const navigate =useNavigate();
- const openOrderSucess = () =>{
-    navigate('/orderSucessful')
- }
- 
+  const navigate = useNavigate();
+
+  const [cartList, setCartlist] = useState([]);
+
+  const getCart = () => {
+    getcartList()
+      .then((response) => {
+        console.log(response);
+        setCartlist(response.data.result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    getCart();
+  }, []);
+
+  const orderSucess = () => {
+    const data = {
+      orders: cartList.map((product) => ({
+        product_id: product._id,
+        product_name: product.product_id.bookName,
+        product_quantity: product.product_id.quantity,
+        product_price: product.product_id.discountPrice,
+      })),
+    };
+    console.log("order sucessful", data);
+    addOrder(data)
+      .then((response) => {
+        console.log(response);
+        navigate("/orderSucessful");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  return (
+    
+      <Box className={classes.Container}>
+        <div  className={classes.newDIv}>
+          <div>
+            <span className={classes.orderSummery}>
+              <b>Order Summery</b>
+            </span>
+          </div>
+
+          {cartList.map((order) => (
+            <div className={classes.bookDetail}>
+              <div className={classes.imgBox}>
+                <img src="Image 11.png" alt="book" width="100px" />
+              </div>
+              <div className={classes.right}>
+                <div className={classes.item2}>
+                  <b className={classes.authorbook}>
+                    {order.product_id.bookName}
+                  </b>
+                  <div className={classes.authorbook}>{order.product_id.author}</div>
+                  <div className={classes.row3}>
+                    Rs.{order.product_id.discountPrice}
+                    <span className={classes.bookcost}>
+                      {order.product_id.price}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+          </div>
+          <div className={classes.Checkout}>
+            <Button
+              className={classes.checkoutBtn}
+              onClick={orderSucess}
+              variant="contained"
+              sx={{
+                backgroundColor: "#3371B5 ",
+                borderRadius: "2px",
+                font: "normal normal  12px/20px ",
+               
+              }}
+            >
+              Checkout
+            </Button>
+          </div>
+       
+      </Box>
    
-    return (
-        <Box>
-            
-            
-            <Box className={classes.Container}>
-              
-                        <div className={classes.row2}  sx={{position:"relative", right:'50px'}}>
-                         
-                        <div>
-                        <span className={classes.orderSummery}><b>Order Summery</b></span>
-                        </div>
-                        <div className={classes.box}>
-                            <div className={classes.imgBox}>
-                                <img src="Image 11.png" alt='book' width="100px" />
-                            </div>
-                            <div className={classes.passTime}>
-                            <div className={classes.item2}>
-                                <b>Game of thrones</b>
-                                <div className={classes.row3}>
-                                    by stephan king
-                                </div>
-                                <div className={classes.row3}>
-                                    Rs. 1500
-                                    <span className={classes.bookcost}>Rs.2000</span>
-
-                                </div>
-                              
-                            </div>
-                           
-                            </div>
-                            <div className={classes.Checkout}>
-                            <Button  
-                            className={classes.checkoutBtn} onClick={openOrderSucess}
-                            variant="contained" sx={{backgroundColor: "#3371B5 ",borderRadius:"2px",font: "normal normal  12px/20px "  , width:"140%"}} 
-                            
-                          >
-                            Checkout
-                          </Button>
-                            </div>
-                           
-                        </div>
-                        </div>
-            </Box>
-        </Box>
-    )
+  );
 }
 
-export default Order
+export default Order;

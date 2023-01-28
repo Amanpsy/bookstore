@@ -6,6 +6,7 @@ import Dashboard from "../dashboard/dashboard";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import OrderSuccess from "../../component/ordersucess";
 import Order from "../../component/orderSummery";
+import Wishlist from "../../component/wishlist";
 function RouteOne() {
   return (
     <div>
@@ -17,6 +18,7 @@ function RouteOne() {
           <Route path="/cart" element={<Mycart />} />
           <Route path="/orderSummery" element={<Order/>} />
           <Route path="/orderSucessful" element={<OrderSuccess />} />
+          <Route path="/wishlist" element={<Wishlist/>} />
         </Routes>
       </Router>
     </div>
