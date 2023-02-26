@@ -15,26 +15,27 @@ const useStyles = makeStyles({
     border: "1px solid red",
     background: "grey 0% 0% no-repeat padding-box",
     display: "flex",
+    flexDirection:"row",
+    justifyContent:"space-evenly"
     
   },
   Left: {
-    position: "relative",
-    top: "185px",
-    left: "420px",
-    width: "624px",
-    height: "391px",
+    marginTop:"140px",
+    width: "40%",
+    height: "53%",
     background: " #F5F5F5 ",
     borderRadius: "21px",
     zIndex: "1",
+    position:"relative",
+    left:"180px"
   },
   Right: {
-    position: "relative",
-    top: "169px",
-    left: "5%",
+    marginTop:"120px",
     width: "389px",
     height: "425px",
     background: "#FFFFFF ",
-
+    position:"relative",
+    right:"280px",
     border: " 1px solid #E4E4E4",
     zIndex: "2",
   },
@@ -159,6 +160,23 @@ const useStyles = makeStyles({
     position: "relative",
     bottom: "25px",
   },
+  ["@media only screen and (min-width: 320px) and (max-width: 480px)"]:{
+    mainDiv:{
+      width:"100%",
+      position:"relative",
+      
+    },
+    Left:{
+      width:"40%",
+      position:"relative",
+      right:"20px"
+    },
+    Right:{
+      width:"40%",
+      position:"relative",
+      right:"20px"
+    }
+  }
 });
 
 
@@ -169,6 +187,7 @@ function Login()
 
   const onLoginclick = () => {
     setShowForm("login");
+    
   };
   const onSignupClick = () => {
     setShowForm("signup");

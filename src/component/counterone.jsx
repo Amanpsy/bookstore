@@ -39,7 +39,7 @@ function CounterOne(props) {
       </div>
 
       <span
-        sx={{ height: "24px", width: "24px", border: "1px solid lightgray" }}
+        sx={{ height: "50px", width: "50px", border: "1px solid red" }}
       >
         {props.count}
       </span>

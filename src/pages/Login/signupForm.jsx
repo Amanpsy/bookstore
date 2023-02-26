@@ -103,7 +103,7 @@ function SignupForm() {
     console.log(signupObj);
   };
 
-  const submit = () => {
+    const submit = () => {
     console.log(signupObj);
     let fullnameTest = fnameRegex.test(signupObj.fullName);
     let usernameTest = useremailRegex.test(signupObj.email);

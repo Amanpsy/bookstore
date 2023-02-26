@@ -3,6 +3,8 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
 import { makeStyles } from '@mui/styles'
+import Footer from './footer';
+import { Card, Grid } from '@mui/material';
 
 const useStyle = makeStyles({
 
@@ -11,6 +13,7 @@ const useStyle = makeStyles({
         flexDirection: 'column',
         justifyContent:"center",
         alignItems:"center"
+      
     },
     main2: {
         width: '16vw',
@@ -36,8 +39,7 @@ const useStyle = makeStyles({
     bookimage2: {
         width: '45%',
         height: '90%',
-     position:"relative",
-     top:"15px"
+    
 
     },
     bookdetail: {
@@ -45,7 +47,7 @@ const useStyle = makeStyles({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop:"20px"
+     
     },
     booktext: {
         width: '85%',
@@ -79,7 +81,7 @@ const useStyle = makeStyles({
 
     },
     bookratings: {
-        width: '60%',
+        
         backgroundColor: '#388E3C',
         display: 'flex',
         flexDirection: 'row',
@@ -89,31 +91,33 @@ const useStyle = makeStyles({
       
     },
     mark: {
-        width: '20%',
+      
         color: '#878787',
         fontFamily: 'normal normal normal Roboto',
         fontSize: '14px',
     },
     bookprice: {
-        width: '40%',
+        
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
         alignItems: 'center',
+       
         
     },
     bookdiscount: {
         fontWeight: '500',
         fontSize: '12px',
-        
+        marginLeft:"2px"
     },
     bookcost: {
         color: '#878787',
         textDecorationLine: 'line-through',
         fontSize: '12px',
-        marginRight:"30px"
+        marginLeft:"5px"
     
     },
+    
 })
 
 function Books(props) {
@@ -122,11 +126,11 @@ function Books(props) {
 
     const classes = useStyle()
     return (
-        <div className={classes.container}>
-            <Paper elevation={1} className={classes.main2}>
+        <Card className={classes.container}>
+            <Box   className={classes.main2}>
                 <Box className={classes.bookimage}>
                     <Box className={classes.bookimage2}>
-                        <img className={classes.bookimg} src="Image 11.png" /></Box>
+                        <img className={classes.bookimg} src="imghola.png" /></Box>
                 </Box>
                 <Box className={classes.bookdetail}>
                     <Box className={classes.booktext}>
@@ -153,9 +157,12 @@ function Books(props) {
                         </Box>
                     </Box>
                 </Box>
-            </Paper>
-        </div>
+            </Box>
+           
+        </Card>
     )
 }
 
 export default Books
+
+

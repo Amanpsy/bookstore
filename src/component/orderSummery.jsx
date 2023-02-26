@@ -14,11 +14,11 @@ const useStyle = makeStyles({
     display: "flex",
     flexDirection: "column",
     border: "1px solid lightGray",
-    width: "778px",
+   
     justifyContent:'center',
     alignItems:"flex-start",
     padding:"18px 36px 18px 36px",
-    marginTop:"40px"
+    marginTop:"60px"
   },
   bookDetail: {
     display: "flex",

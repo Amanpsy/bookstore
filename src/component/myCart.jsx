@@ -8,8 +8,10 @@ import CustomerDetails from "./customerDetail";
 import { useState } from "react";
 import CounterOne from "./counterone";
 import Order from "./orderSummery";
-import { cartApi, getcartList } from "../services/dataService";
+import { cartApi, getcartList, removeCart } from "../services/dataService";
 import { useNavigate } from "react-router-dom";
+import Footer from "./footer";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles({
   main: {
@@ -53,8 +55,6 @@ const useStyles = makeStyles({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     marginLeft: "25px",
-
-    width: "25%",
   },
 
   bookauthor: {
@@ -65,7 +65,6 @@ const useStyles = makeStyles({
   bookPrice: {
     display: "flex",
     flexDirection: "row",
-
     color: "#0A0102",
   },
   discount: {
@@ -86,7 +85,6 @@ const useStyles = makeStyles({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: "60%",
     marginTop: "10px",
   },
 
@@ -94,12 +92,14 @@ const useStyles = makeStyles({
     color: "gray",
   },
   remove: {
-    font: "normal normal normal 12px/15px Lato",
+    fontSize: "12px",
     letterSpacing: "0px",
     color: " #0A0102",
     opacity: "1",
-    width: "42px",
+
     height: "15px",
+    position: "relative",
+    left: "40px",
   },
   cartValue: {
     font: "normal normal medium 14px/17px Lato",
@@ -122,7 +122,7 @@ const useStyles = makeStyles({
   },
 
   secondBox: {
-    width: "850px",
+    width: "840px",
     height: "60px",
     border: "0.5px solid lightgray",
     display: "flex",
@@ -133,7 +133,7 @@ const useStyles = makeStyles({
     marginTop: "10px",
   },
   thirdBox: {
-    width: "850px",
+  
     height: "60px",
     border: "0.5px solid lightgray",
     display: "flex",
@@ -141,7 +141,8 @@ const useStyles = makeStyles({
     justifyContent: "flex-start",
     alignItems: "center",
     padding: "5px",
-    marginTop: "20px",
+    marginTop: "25px",
+    marginBottom:"10px"
   },
   addressDetail: {
     font: "normal normal normal 15px/18px ",
@@ -187,7 +188,7 @@ function Mycart() {
   const [showOrdersummery, setshowOrdersummery] = useState(false);
 
   const [cartList, setCartlist] = useState([]);
-  console.log(cartList);
+
   const getCart = () => {
     getcartList()
       .then((response) => {
@@ -205,6 +206,17 @@ function Mycart() {
 
   const showpage = () => {
     setShowcustomerDetail(true);
+  };
+
+  const removeBook = (_id) => {
+    removeCart(_id)
+      .then((response) => {
+        console.log(response);
+        getCart();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const incrementQuantity = (bookId, count) => {
@@ -232,7 +244,6 @@ function Mycart() {
       });
   };
 
-  console.log(showOrdersummery)
   const openBook = () => {
     navigate("/dashboard");
   };
@@ -299,9 +310,15 @@ function Mycart() {
                       count={book.quantityToBuy}
                     />
                   </div>
-                  <div>
-                    <span className={classes.remove}>Remove</span>
-                  </div>
+
+                  <Button
+                    onClick={() => removeBook(book._id)}
+                    className={classes.remove}
+                    size="small"
+                  >
+                    {" "}
+                    Remove
+                  </Button>
                 </div>
               </div>
             </div>
@@ -342,9 +359,8 @@ function Mycart() {
               />
             ) : null}
 
-         
             {showOrdersummery ? (
-              <Order/>
+              <Order />
             ) : (
               <div className={classes.thirdBox}>
                 <div>
@@ -357,8 +373,9 @@ function Mycart() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
 
-export default Mycart;
+export default connect()(Mycart);

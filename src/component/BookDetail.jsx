@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@mui/styles";
 import Box from "@mui/material/Box";
 import StarIcon from "@mui/icons-material/Star";
@@ -7,8 +7,14 @@ import { Divider } from "@mui/material";
 import Rating from "@mui/material/Rating";
 import InputBase from "@mui/material/InputBase";
 import CounterOne from "./counterone";
-import { addTocart, addToWishlist, cartApi } from "../services/dataService";
+import {
+  addTocart,
+  addToWishlist,
+  cartApi,
+  getcartList,
+} from "../services/dataService";
 import Header from "./Header";
+import Footer from "./footer";
 
 const useStyle = makeStyles({
   headerbsummary: {
@@ -25,7 +31,7 @@ const useStyle = makeStyles({
     flexDirection: "row",
     position: "relative",
     left: "15px",
-    top:"30px"
+    top: "30px",
   },
   home: {
     color: "#9D9D9D",
@@ -45,8 +51,8 @@ const useStyle = makeStyles({
     flexDirection: "row",
     alignItems: "flex-start",
     position: "relative",
-  right:"6%",
-  marginTop:"60px"
+    right: "6%",
+    marginTop: "60px",
   },
   container4: {
     width: "96%",
@@ -223,60 +229,124 @@ const useStyle = makeStyles({
     alignItems: "flex-end",
     position: "relative",
   },
-  detail:{
-    position:"relative",
-    left:"2px"
+  detail: {
+    position: "relative",
+    left: "2px",
   },
-  round:{
-    position:"relative",
-    right:"2px"
+  round: {
+    position: "relative",
+    right: "2px",
   },
-  new:{
-    marginLeft:"40px"
-  }
+  new: {
+    marginLeft: "40px",
+  },
+  overall: {
+    fontSize: "14px",
+    height: "18%",
+  },
+  ["@media only screen and (min-width: 320px) and (max-width: 480px)"]: {
+    container3: {
+      position: "relative",
+      right: "80px",
+      width: "100%",
+    },
+    container4: {
+      position: "relative",
+
+      width: "100%",
+    },
+    feedbackbutton: {
+      display: "none",
+    },
+    buttons: {
+      width: "80%",
+    },
+    bookcost1: {
+      position: "relative",
+      left: "15px",
+    },
+    bookratings1: {
+      width: "250%",
+      position: "relative",
+      left: "6px",
+    },
+    bookquantity1: {
+      position: "relative",
+      left: "10px",
+    },
+    para1: {},
+    paratext: {
+      display: "none",
+    },
+    customerfeedback: {
+      width: "90%",
+      position: "relative",
+      top: "30px",
+    },
+    feedbackrate: {
+      width: "100%",
+      position: "relative",
+      right: "8px",
+    },
+    stars: {
+      width: "90%",
+    },
+    overall: {
+      position: "relative",
+      left: "15px",
+    },
+    bookimg: {
+      width: "120%",
+    },
+  },
 });
 
 function BookDetails(props) {
   const classes = useStyle();
+  const [cartList, setCartlist] = useState([]);
+  const[cartToggle,setCartToggle] = useState(false)
 
-  const [count, setCount] = useState(0);
-  const [showCOunter, setshowCOunter] = useState(false);
-
+  const [cartObj, setcartObj] = useState(null);
 
   const incrementQuantity = () => {
-   
-    setCount((prevState) => prevState + 1);
     let data = {
-      quantityToBuy: count + 1,
+      quantityToBuy: cartObj?.quantityToBuy + 1,
     };
     cartQuantity(data);
   };
 
   const decreaseQuantity = () => {
-    setCount((prevState) => prevState - 1);
     let data = {
-      quantityToBuy: count - 1,
+      quantityToBuy: cartObj?.quantityToBuy - 1,
     };
     cartQuantity(data);
   };
 
   const cartQuantity = (data) => {
     console.log(props.bookId);
-    cartApi(props.bookId, data)
+    cartApi(cartObj._id, data)
       .then((response) => {
         console.log(response);
+        getCart();
       })
       .catch((error) => {
         console.log(error);
       });
   };
-  const openBook = () => {
-    props.openBookBack();
+
+  const getCart = () => {
+    getcartList()
+      .then((response) => {
+        console.log(response);
+        setCartlist(response.data.result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
-  const openCounter = () => {
-    setshowCOunter(true);
-   
+  const openBook = () => {
+    props.openBookBack();
   };
 
   const myCartDetails = () => {
@@ -289,16 +359,12 @@ function BookDetails(props) {
       });
   };
 
-
-
-
   const addToBag = () => {
     addTocart(props.bookId)
       .then((response) => {
         console.log(response);
-        if (response.data.success){
-          setCount(count + 1)
-          setshowCOunter(true)
+        if (response.data.success) {
+          getCart();
         }
       })
       .catch((error) => {
@@ -306,36 +372,55 @@ function BookDetails(props) {
       });
   };
 
+  useEffect(() => {
+    getCart();
+  }, []);
 
+  useEffect(() => {
+    if (cartList.length > 0) {
+      const cart = cartList.filter(
+        (item) => item.product_id._id === props.bookId
+      );
 
-  
+      if (cart.length > 0) {
+        setcartObj(cart[0]);
+        setCartToggle(true)
+      }
+    }
+  }, [cartList]);
 
   return (
-  
     <Box>
-    
-      
-        <Box className={classes.homebook}>
-          <Box className={classes.home} onClick={() => openBook()}>
-            Home
-          </Box>
-          <Box className={classes.book}>/ Book (01)</Box>
+      <Box className={classes.homebook}>
+        <Box className={classes.home} onClick={() => openBook()}>
+          Home
         </Box>
-      
+        <Box className={classes.book}>/ Book (01)</Box>
+      </Box>
+
       <Box className={classes.container3}>
         <Box className={classes.container4}>
-        <div className={classes.smallImg}>
-        <img src="Image 46.png"></img>
-        <img src="Image 1.png"></img>
-        
-        </div>
+          <div className={classes.smallImg}>
+            <img src="Image 46.png"></img>
+            <img src="Image 1.png"></img>
+          </div>
           <Box className={classes.buttons}>
             <Box className={classes.bookimg}>
               <img src="newBook.png" width="65%" height="65%" />
             </Box>
             <Box className={classes.bookbtn}>
               <Box className={classes.bookbtns}>
-                {showCOunter === false ? (
+                {cartToggle ? (
+                  <div className={classes.new}>
+                  <CounterOne  
+
+                    count={cartObj?.quantityToBuy}
+                    incrementQuantity={incrementQuantity}
+                    decreaseQuantity={decreaseQuantity}
+                  />
+                </div>
+                  
+                ) : 
                   <Button
                     variant="contained"
                     className={classes.addbag}
@@ -344,24 +429,9 @@ function BookDetails(props) {
                   >
                     Add to Bag
                   </Button>
-                ) : (
-                  ""
-                )}
-                {    count > 0 ? (
-                 <div className={classes.new}>
-                 <CounterOne
-                 count={count}
-                 onClick={openCounter}
-                 incrementQuantity={incrementQuantity}
-                 decreaseQuantity={decreaseQuantity}
-               
-                  />
-                  </div>
-                ) : (
-                  ""
-                )}
-                  
-                <Button sx={{minWidth:"99px"}}
+                }
+               <Button
+                  sx={{ minWidth: "99px" }}
                   onClick={myCartDetails}
                   variant="contained"
                   className={classes.addfav}
@@ -402,15 +472,16 @@ function BookDetails(props) {
 
               <Box className={classes.bookparagraph}>
                 <Box className={classes.para1}>
-                  <span className={classes.detail}
+                  <span
+                    className={classes.detail}
                     style={{
                       color: "#878787",
                       display: "flex",
                       alignItems: "center",
                     }}
-                 
-                    >
-                    <Box className={classes.round} 
+                  >
+                    <Box
+                      className={classes.round}
                       style={{
                         width: "5px",
                         height: "5px",
@@ -445,9 +516,7 @@ function BookDetails(props) {
 
               <Box className={classes.feedbackrating}>
                 <Box className={classes.feedbackrate}>
-                  <Box sx={{ fontSize: "14px", height: "18%" }}>
-                    Overall rating
-                  </Box>
+                  <Box className={classes.overall}>Overall rating</Box>
                   <Box className={classes.stars}>
                     <Rating
                       sx={{ position: "relative", right: "4px", top: "3px" }}

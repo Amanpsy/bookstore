@@ -6,6 +6,7 @@ import Header from "./Header";
 import { getWishList, removeWishList } from "../services/dataService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Footer from "./footer";
 
 const useStyle = makeStyles({
   headerbsummary: {
@@ -80,7 +81,8 @@ const useStyle = makeStyles({
   },
   
   trash: {
-    left: "350px",
+  position:"relative",
+  left:"120%"
    
   },
   span: {
@@ -155,14 +157,17 @@ function Wishlist() {
                 onClick={() => removeWishlistApi(book?.product_id?._id)}
                 
               >
-                <DeleteOutlinedIcon sx={{ height: "18px" }} />
+                <DeleteOutlinedIcon className={classes.trash} sx={{ height: "18px" }} />
               </IconButton>
               </div>
             </div>
           </div>
         ))}
       </Box>
+      
     </div>
+    
+
   );
 }
 

@@ -7,7 +7,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { addAddress } from "../services/dataService";
 import { Navigate, useNavigate } from "react-router-dom";
 import Order from "./orderSummery";
-
+import Footer from "./footer";
 
 const useStyle = makeStyles({
   containercd: {
@@ -17,8 +17,8 @@ const useStyle = makeStyles({
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
-    bottom:"80px",
-    top:"20px",
+    bottom: "80px",
+    top: "20px",
     border: "1px solid #DCDCDC",
   },
   maindetails: {
@@ -29,8 +29,8 @@ const useStyle = makeStyles({
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
-   position:'relative',
-   top:"20px"
+    position: "relative",
+    top: "20px",
   },
   maincd: {
     width: "100%",
@@ -38,15 +38,13 @@ const useStyle = makeStyles({
     border: "0px solid red",
     display: "flex",
     justifyContent: "space-between",
- 
   },
   customerdetails: {
     color: "#333232",
     fontSize: "20px",
     fontWeight: "500",
-    position:"relative",
-    left:"10px"
-  
+    position: "relative",
+    left: "10px",
   },
   newadd: {
     width: "20%",
@@ -101,7 +99,7 @@ const useStyle = makeStyles({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: "5px 64px 0px 0px"
+    padding: "5px 64px 0px 0px",
   },
   continuebutton: {
     width: "100%",
@@ -110,22 +108,45 @@ const useStyle = makeStyles({
     display: "flex",
     justifyContent: "flex-end",
   },
-  radiobutton1:{
-    marginTop:"18px"
-  }
+  radiobutton1: {
+    marginTop: "18px",
+  },
 });
 
 function CustomerDetails(props) {
   const classes = useStyle();
 
+  const fnameRegex =
+    /(^[A-Za-z]{3,16})([ ]{0,1})([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})?([ ]{0,1})?([A-Za-z]{3,16})/;
+
+  const phoneRegex = /^[6-9]{1}[0-9]{9}$/;
+
+  const stateRegex = /^([a-zA-Z]+|[a-zA-Z]+\s[a-zA-Z]+)$/;
+
+  const cityRegex = /^([a-zA-Z]+|[a-zA-Z]+\s[a-zA-Z]+)$/;
+
+  const [regexObj, setRegexobj] = useState({
+    fnameBorder: false,
+    fnameHelper: "",
+    addressBorder: false,
+    addressHelper: "",
+    stateBorder: false,
+    stateHelper: "",
+    phoneBorder: false,
+    phoneHelper: "",
+    cityBorder: false,
+    cityHelper: "",
+  });
 
   const [continuebutton, setContinueButton] = useState(false);
 
   const [customerDetails, setCustomerDetails] = useState({
-    addressType: "",
     fullAddress: "",
+    addressType: "",
     city: "",
     state: "",
+    fullName: "",
+    mobile: "",
   });
 
   const takeAddress = (event) => {
@@ -153,22 +174,110 @@ function CustomerDetails(props) {
     }));
   };
 
-  const openOrderDetails = () => {
-    addAddress(customerDetails)
-      .then((response) => {
-        console.log(response, "getting cx details");
-        setContinueButton(true)
-        props.onContinueclick();
-       
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const takeName = (event) => {
+    setCustomerDetails((prevState) => ({
+      ...prevState,
+      fullName: event.target.value,
+    }));
+  };
+  const takeMobilenumber = (event) => {
+    setCustomerDetails((prevState) => ({
+      ...prevState,
+      mobile: event.target.value,
+    }));
   };
 
+  
+
+  const submit = () => {
+    console.log(customerDetails);
+    let fnameTest = fnameRegex.test(customerDetails.fullName);
+    let mobilenoTest = phoneRegex.test(customerDetails.mobile);
+  
+    let cityTest = cityRegex.test(customerDetails.city);
+    let stateTest = stateRegex.test(customerDetails.state);
+
+    if (fnameTest === false) {
+      setRegexobj((prevState) => ({
+        ...prevState,
+        fnameBorder: true,
+        fnameHelper: "Enter valid name",
+      }));
+    } else if (fnameTest === true) {
+      setRegexobj((prevState) => ({
+        ...prevState,
+        fnameBorder: false,
+        fnameHelper: "",
+      }));
+    }
+
+  
+
+   
+
+    if (mobilenoTest === false) {
+      setRegexobj((previousState) => ({
+        ...previousState,
+        phoneBorder: true,
+        phoneHelper: "Enter valid mobile number",
+      }));
+    } else if (mobilenoTest === true) {
+      setRegexobj((previousState) => ({
+        ...previousState,
+        phoneBorder: false,
+        phoneHelper: "",
+      }));
+    }
+
+    if (stateTest === false) {
+      setRegexobj((previousState) => ({
+        ...previousState,
+        stateBorder: true,
+        stateHelper: "Enter valid State",
+      }));
+    } else if (stateTest === true) {
+      setRegexobj((previousState) => ({
+        ...previousState,
+        stateBorder: false,
+        stateHelper: "",
+      }));
+    }
+
+
+    if (cityTest === false) {
+      setRegexobj((previousState) => ({
+        ...previousState,
+        cityBorder: true,
+        cityHelper: "Enter valid city",
+      }));
+    } else if (cityTest === true) {
+      setRegexobj((previousState) => ({
+        ...previousState,
+        cityBorder: false,
+        cityHelper: "",
+      }));
+    }
 
 
 
+
+    if (
+      fnameTest === true &&
+      cityTest === true &&
+      stateTest === true &&
+      mobilenoTest === true
+    ) {
+      addAddress(customerDetails)
+        .then((response) => {
+          console.log(response, "Customer details added sucessfully");
+          setContinueButton(true);
+          props.onContinueclick();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
 
   return (
     <div>
@@ -184,7 +293,7 @@ function CustomerDetails(props) {
                   color: "#A03037",
                   border: "1px solid #A03037",
                   textTransform: "capitalize",
-                  padding:"0px"
+                  padding: "0px",
                 }}
               >
                 Add New Address
@@ -196,31 +305,47 @@ function CustomerDetails(props) {
               <Box className={classes.inputcd}>
                 <Box className={classes.textcd}>
                   <span>Full Name</span>
-                  <TextField variant="outlined" size="small" />
+                  <TextField
+                    onChange={takeName}
+                    error={regexObj.fnameBorder}
+                    helpertext={regexObj.fnameHelper}
+                    variant="outlined"
+                    size="small"
+                  />
                 </Box>
                 <Box className={classes.textcd}>
                   <span>Mobile Number</span>
-                  <TextField variant="outlined" size="small" />
+                  <TextField
+                    onChange={takeMobilenumber}
+                    error={regexObj.phoneBorder}
+                    helpertext={regexObj.phoneBorder}
+                    variant="outlined"
+                    size="small"
+                  />
                 </Box>
               </Box>
               <Box className={classes.addressdetail}>
                 <Box className={classes.address}>
                   <span>Address</span>
-                  <OutlinedInput
+                  <TextField
                     variant="outlined"
-                    size="small"
+                    size="large"
                     onChange={takeAddress}
+                    error={regexObj.addressBorder}
+                    helpertext={regexObj.addressHelper}
                     sx={{ width: "100%", height: "80%" }}
                   />
                 </Box>
               </Box>
               <Box className={classes.inputcd}>
                 <Box className={classes.textcd}>
-                  <span>city/town</span>
+                  <span>city</span>
                   <TextField
                     variant="outlined"
                     size="small"
                     onChange={takeCity}
+                 error={regexObj.cityBorder}
+                 helpertext= {regexObj.cityHelper}
                   />
                 </Box>
                 <Box className={classes.textcd}>
@@ -229,58 +354,57 @@ function CustomerDetails(props) {
                     variant="outlined"
                     size="small"
                     onChange={takeState}
+                    error={regexObj.stateBorder}
+                    helpertext={regexObj.stateHelper}
                   />
                 </Box>
               </Box>
-              <Box
-                className={classes.radiobuttons}
-                
-              >
+              <Box className={classes.radiobuttons}>
                 <span className={classes.radiobutton1}>Type</span>
-                <Box className={classes.radiobuttons} onChange={takeType}> 
-                <div>
-                  <FormControlLabel
-                    value="Home"
-                    name="Type"
-                    control={<Radio />}
-                    label="Home"
-                  />
+                <Box className={classes.radiobuttons} onChange={takeType}>
+                  <div>
+                    <FormControlLabel
+                      value="Home"
+                      name="Type"
+                      control={<Radio />}
+                      label="Home"
+                    />
                   </div>
                   <div>
-                  <FormControlLabel
-                    value="Office"
-                    name="Type"
-                    control={<Radio />}
-                    label="Office"
-                  />
+                    <FormControlLabel
+                      value="Office"
+                      name="Type"
+                      control={<Radio />}
+                      label="Office"
+                    />
                   </div>
                   <div>
-                  <FormControlLabel
-                    value="other"
-                    name="Type"
-                    control={<Radio />}
-                    label="Other"
-                  />
+                    <FormControlLabel
+                      value="other"
+                      name="Type"
+                      control={<Radio />}
+                      label="Other"
+                    />
                   </div>
                 </Box>
               </Box>
             </Box>
           </Box>
-          {continuebutton ? "" :
+          {continuebutton ? (
+            ""
+          ) : (
             <Box className={classes.continuebutton}>
-            <Button
-              sx={{ width: "23%", height: "80%" }}
-              variant="contained"
-            onClick={openOrderDetails}
-            >
-              Continue
-            </Button> 
-            
-          </Box>}
+              <Button
+                sx={{ width: "23%", height: "80%" }}
+                variant="contained"
+                onClick={submit}
+              >
+                Continue
+              </Button>
+            </Box>
+          )}
         </Box>
-     
       </Card>
-      
     </div>
   );
 }

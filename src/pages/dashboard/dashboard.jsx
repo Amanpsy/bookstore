@@ -5,9 +5,10 @@ import Books from "../../component/Books";
 import { getBookList } from "../../services/dataService";
 import { useState } from "react";
 import { padding } from "@mui/system";
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import BookDetails from "../../component/BookDetail";
 import Paginations from "../../component/pagination";
+import Footer from "../../component/footer";
 
 const useStyle = makeStyles({
   container: {
@@ -15,6 +16,7 @@ const useStyle = makeStyles({
     display: "flex",
     flexDirection: "column",
     flexWrap: "wrap",
+    
   },
   text: {
     display: "flex",
@@ -22,15 +24,15 @@ const useStyle = makeStyles({
     justifyContent: "flex-start",
     alignItems: "center",
     width: "100%",
-    padding: " 15px 20px 15px 0px ",
+    
   },
   bookspan: {
     font: "normal normal normal 25px/33px Roboto",
     letterSpacing: "0px",
     color: "black",
     opacity: "1",
-    position: "relative",
-    right: "50px",
+    marginLeft:"175px"
+  
   },
   itemspan: {
     font: "normal normal normal 12px/16px Roboto",
@@ -38,24 +40,37 @@ const useStyle = makeStyles({
     color: "#9D9D9D",
     opacity: "1",
     padding: "5px 20px 0px 5px",
-    position: "relative",
-    right: "50px",
+    marginLeft:"2px"
+  
   },
   mainbooks: {
     display: "flex",
     flexDirection: "row",
+    gap: "18px",
+    justifyContent:'center',
+    alignItems:'center',
+    marginTop:"15px",
     flexWrap: "wrap",
-    gap: "15px",
-    position: "relative",
-    right: "60px",
+  
+    
   },
   contentWrapper: {
     display: "flex",
     flexDirection: "column",
-    alignItem: "center",
-    justifyContent: "center",
-    padding: "0px 180px 0px 280px",
+  
+  
+    
   },
+
+  
+  ["@media only screen and (min-width: 320px) and (max-width: 480px)"]:{
+    container : {
+      
+     
+    }
+
+  },
+
 });
 
 function Dashboard() {
@@ -64,9 +79,9 @@ function Dashboard() {
   const [bookList, setBookList] = useState([]);
   const [showDetails, setShowdetails] = useState(false);
   const [bookDetails, setBookdetails] = useState({});
-  const [search, setsearch] = useState();
+  const [search, setsearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 4;
+  const postsPerPage = 8;
 
   const selectedBookDetails = (details) => {
     setShowdetails(true);
@@ -117,7 +132,7 @@ function Dashboard() {
             <span className={classes.itemspan}>( {bookList.length} items)</span>
           </div>
         )}
-        <div className={classes.mainbooks}>
+        <Box className={classes.mainbooks}>
           {showDetails ? (
             <BookDetails
               openBookBack={openBookBack}
@@ -135,15 +150,17 @@ function Dashboard() {
               </Box>
             ))
           )}
-          <Paginations
+          
+        </Box>
+        <Paginations 
             page={currentPage}
             paginate={paginate}
             count={bookList.length / postsPerPage}
           />
-        </div>
       </div>
-      <div></div>
+   <Footer/>
     </div>
+    
   );
 }
 

@@ -55,6 +55,11 @@ export const getcartList = () => {
   );
   return response;
 };
+export const removeCart = (bookId) => {
+  let response = axios.delete(`https://bookstore.incubation.bridgelabz.com/bookstore_user/remove_cart_item/${bookId}`,headerConfig)
+  console.log(response)
+   return response
+}
 
 export const addOrder = (orderObj) => {
   let response = axios.post("https://bookstore.incubation.bridgelabz.com/bookstore_user/add/order",orderObj,headerConfig)

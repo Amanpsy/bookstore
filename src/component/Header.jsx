@@ -18,6 +18,8 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import PersonIcon from "@mui/icons-material/Person";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
+import { getcartList } from "../services/dataService";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -56,11 +58,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
- function Header() {
-
-  const [search, setsearch] = React.useState("");
-  console.log(search)
-
+function Header(props) {
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -76,14 +74,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     setMobileMoreAnchorEl(null);
   };
 
- 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-
-  
- 
-  
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
@@ -116,9 +109,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
           aria-label="show 17 new notifications"
           color="inherit"
         >
-          <Badge badgeContent={17} color="error">
-      
-          </Badge>
+          <Badge badgeContent={17} color="error"></Badge>
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
@@ -137,71 +128,96 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     </Menu>
   );
 
+
+  const loadBadge = () => {
+    getcartList().then((response) => {
+      props.dispatch({
+          type:'UPDATE_BADGE',
+          payload:response.data.result.length
+      })
+  })
+}
+
   return (
     <Box sx={{ flexGrow: 1, marginLeft: "-8px", marginRight: "-20px" }}>
-      <AppBar sx={{ backgroundColor: "#A03037" }} position="static">
+      <AppBar sx={{ backgroundColor: "#A03037" }} position="static"  onLoad={() => loadBadge()}>
         <Toolbar>
           <Box sx={{ marginLeft: 20 }}>
             <img src="education.svg"></img>
           </Box>
-          <div  >
-          <Typography
-            variant="h6"
-            noWrap
-            
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" }, marginLeft: 2 , size:"small"}}
-          >
-            BookStore
-          </Typography>
+          <div>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{
+                display: { xs: "none", sm: "block" },
+                marginLeft: 2,
+                size: "small",
+              }}
+            >
+              BookStore
+            </Typography>
           </div>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
-            <StyledInputBase 
-            onChange={(e) => setsearch(e.target.value) }
+            <StyledInputBase
+            
               placeholder="Search…"
               sx={{
                 color: "black",
                 size: "Small",
                 position: "relative",
-                right:"320px"
-           
+                right: "320px",
               }}
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: "none", md: "flex" }, position:"relative", right: 200 }}>
-
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+              position: "relative",
+              right: 200,
+            }}
+          >
             <IconButton
               size="medium"
-              sx={{ display: "flex", flexDirection: "column" , position: "relative"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
               }}
               color="inherit"
             >
-              <div  >
+              <div>
                 <PersonIcon />
               </div>
               <Box sx={{ fontSize: "10px" }}>Profile</Box>
             </IconButton>
             <IconButton
               size="medium"
-              sx={{ display: "flex", flexDirection: "column", position: "relative",left:"20px"
-             }}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
+                left: "20px",
+              }}
               color="inherit"
             >
-              <div>
-                <ShoppingCartIcon  onClick={()=> navigate('/cart')} />
+              <div onClick={() => navigate("/cart")}>
+                <Badge badgeContent={props.count} color="warning">
+                  <ShoppingCartIcon />
+                </Badge>
               </div>
-              <Box  sx={{ fontSize: "10px" }}>Cart</Box>
+              <Box sx={{ fontSize: "10px" }}>Cart</Box>
             </IconButton>
             <IconButton
               size="large"
               edge="end"
               aria-label="account of current user"
-             
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               color="inherit"
@@ -222,8 +238,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-      
     </Box>
   );
 }
-export default  Header
+
+const mapStateToProps  = (state) => {
+return {
+  count : state.BadgeReducer.count
+}
+}
+export default connect(mapStateToProps)(Header);
